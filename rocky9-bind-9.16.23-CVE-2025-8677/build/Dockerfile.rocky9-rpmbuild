@@ -1,0 +1,19 @@
+FROM rockylinux:9.2
+
+# Install RPM build tools and dependencies
+RUN dnf install -y \
+    rpm-build \
+    rpmdevtools \
+    wget \
+    gcc \
+    make \
+    diffutils \
+    findutils \
+    && dnf clean all
+
+# Create rpmbuild directory structure
+RUN rpmdev-setuptree
+
+WORKDIR /root
+
+CMD ["/bin/bash"]
