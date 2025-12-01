@@ -1,0 +1,42 @@
+FROM centos:7.9.2009
+
+LABEL maintainer="Security Research Team"
+LABEL description="CentOS 7.9 RPM build environment for BIND 9.11.4-P2"
+LABEL version="1.0"
+
+# Fix CentOS 7 EOL mirror issues
+RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*.repo && \
+    sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*.repo
+
+# Install RPM build tools and dependencies
+RUN yum -y update && \
+    yum -y install \
+    rpm-build \
+    rpmdevtools \
+    yum-utils \
+    wget \
+    tar \
+    gzip \
+    patch \
+    gcc \
+    gcc-c++ \
+    make \
+    perl \
+    openssl-devel \
+    libcap-devel \
+    libxml2-devel \
+    krb5-devel \
+    geoip-devel \
+    libuv-devel \
+    diffutils \
+    && yum clean all
+
+# Create RPM build environment
+RUN rpmdev-setuptree
+
+WORKDIR /root
+
+# Set up rpmbuild directories
+ENV RPMBUILD_DIR=/root/rpmbuild
+
+CMD ["/bin/bash"]

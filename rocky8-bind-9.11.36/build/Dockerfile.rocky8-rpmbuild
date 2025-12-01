@@ -1,0 +1,37 @@
+FROM rockylinux:8.6
+
+LABEL maintainer="CVE-2025-8677 Build Team"
+LABEL description="Rocky Linux 8.6 RPM build environment for BIND 9.16.23-24"
+
+# Enable PowerTools repository for development packages
+RUN dnf install -y 'dnf-command(config-manager)' && \
+    dnf config-manager --set-enabled powertools
+
+# Install RPM build tools
+RUN dnf install -y \
+    rpm-build \
+    rpmdevtools \
+    dnf-plugins-core \
+    wget \
+    vim \
+    less \
+    diffutils \
+    && dnf clean all
+
+# Install basic build dependencies
+RUN dnf install -y \
+    gcc \
+    gcc-c++ \
+    make \
+    perl \
+    pkgconfig \
+    && dnf clean all
+
+# Setup rpmbuild directory structure
+RUN rpmdev-setuptree
+
+# Set working directory
+WORKDIR /root
+
+# Keep container running
+CMD ["/bin/bash"]
