@@ -1,3 +1,2 @@
-# Ignore large binary files
-*.rpm
-**/binary/*.rpm
+# Git LFS handles RPM files now - see .gitattributes
+# *.rpm files are tracked via LFS
