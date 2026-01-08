@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  bind-rpmbuild:
+    build:
+      context: .
+      dockerfile: Dockerfile.centos7-rpmbuild
+    container_name: centos7-bind-rpmbuild
+    hostname: rpmbuild.centos7.test
+    volumes:
+      # Mount patch files from distribution
+      - ../patches:/patches:ro
+      # Mount results directory
+      - ./results:/results
+      # Mount build script
+      - ./build-bind-rpm.sh:/root/build-bind-rpm.sh:ro
+    working_dir: /root
+    command: /bin/bash
+    tty: true
+    stdin_open: true

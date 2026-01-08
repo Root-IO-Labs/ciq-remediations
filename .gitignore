@@ -1,0 +1,2 @@
+# Git LFS handles RPM files now - see .gitattributes
+# *.rpm files are tracked via LFS

